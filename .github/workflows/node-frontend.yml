@@ -1,0 +1,33 @@
+name: CI
+
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    paths:
+      - 'cronex-usdt-dashboard/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # Fetches all history for all branches and tags.
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '20' # Specify the Node.js version.
+
+    - name: Install Dependencies
+      run: npm install # or use 'yarn install' if you prefer Yarn
+
+    - name: Run Linter
+      run: npm run lint # Assumes you have a lint script in your package.json
+
+    - name: Run Tests
+      run: npm test # Assumes you have a test script in your package.json
+
+    - name: Build Project
+      run: npm run build # Builds your React.js project
