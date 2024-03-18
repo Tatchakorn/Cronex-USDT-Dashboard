@@ -16,7 +16,7 @@ const BitkubInfo = ({ spotPrice, change, bidData, askData }) => {
       setHighlight(true);
       const timer = setTimeout(() => setHighlight(false), 1500); // Highlight duration
       return () => clearTimeout(timer);
-    }, [spotPrice, bidData, askData]);
+    }, [spotPrice]);
   
     return (
       <Card sx={{ mb: 4, overflow: 'hidden' }}>

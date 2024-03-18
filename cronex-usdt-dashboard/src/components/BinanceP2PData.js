@@ -1,68 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, Typography, ToggleButtonGroup, ToggleButton, Box, TextField, Button } from '@mui/material';
+import { Card, CardContent, Typography, Grid, TextField, Button, Box } from '@mui/material';
 import BinanceP2PTable from './BinanceP2PTable';
 import binanceLogo from '../assets/binance-logo.png';
 
 const BinanceP2PData = ({ buyData, sellData }) => {
-  const [side, setSide] = useState('buy');
-  const [data, setData] = useState(buyData); // Start with buy data as default
-  const [priceInput, setPriceInput] = useState('1000000');
-
-  const handleSideChange = (event, newSide) => {
-    if (newSide !== null) {
-      setSide(newSide);
-      setData(newSide === 'buy' ? buyData : sellData);
-    }
-  };
-
-  useEffect(() => {
-    // Update data when buyData, sellData, or side changes
-    setData(side === 'buy' ? buyData : sellData);
-  }, [buyData, sellData, side]);
-
-  const handlePriceSubmit = () => {
-    // Implement the logic to handle price submission here
-    console.log(priceInput);
-    setPriceInput(''); // Clear the input after submission
-  };
-
   return (
-    <Card sx={{ mb: 4 }}>
+    <Card sx={{ mb: 4, overflow: 'hidden', maxWidth: '100%', mx: "auto" }}>
       <CardContent>
-      <img src={binanceLogo} alt="Binance Logo" style={{ height: '24px', marginRight: '10px' }} />
-        <Typography variant="h6" gutterBottom>
-          Binance P2P Market
-        </Typography>
-        <ToggleButtonGroup
-          color="primary"
-          value={side}
-          exclusive
-          onChange={handleSideChange}
-          sx={{ mb: 2, '& .MuiToggleButtonGroup-grouped': { m: 0.5, borderColor: '#EAECEF' }}}
-        >
-          <ToggleButton value="buy" sx={{ backgroundColor: side === 'buy' ? '#F0B90B' : '', '&:hover': { bgcolor: 'rgba(240,185,11,0.1)' } }}>Buy</ToggleButton>
-          <ToggleButton value="sell" sx={{ backgroundColor: side === 'sell' ? '#F0B90B' : '', '&:hover': { bgcolor: 'rgba(240,185,11,0.1)' } }}>Sell</ToggleButton>
-        </ToggleButtonGroup>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <TextField
-            disabled={true}
-            label="Enter price (THB)"
-            variant="outlined"
-            value={priceInput}
-            onChange={(e) => setPriceInput(e.target.value)}
-            type="number"
-            sx={{ flexGrow: 1 }}
-            InputProps={{
-              endAdornment: (
-                <Button disabled={true} variant="contained" onClick={handlePriceSubmit} sx={{ bgcolor: '#F0B90B', '&:hover': { bgcolor: 'rgba(240,185,11,0.9)' } }}>
-                  Submit
-                </Button>
-              ),
-            }}
-          />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <img src={binanceLogo} alt="Binance Logo" style={{ height: '48px', marginRight: '10px' }} />
+          <Typography variant="h5" gutterBottom>
+            Binance P2P Market
+          </Typography>
         </Box>
-        <BinanceP2PTable data={data} />
+        <TextField
+          disabled
+          label="Enter price (THB)"
+          variant="outlined"
+          value="1000000"
+          sx={{ mb: 2, width: "100%", maxWidth: "500px", mx: "auto" }} // Center the text field
+          InputProps={{
+            endAdornment: (
+              <Button disabled variant="contained" sx={{ bgcolor: '#bdbdbd' }}>
+                Submit
+              </Button>
+            ),
+          }}
+        />
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', color: '#4caf50' }}>
+              Buy Orders
+            </Typography>
+            <BinanceP2PTable data={buyData} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', color: '#f44336' }}>
+              Sell Orders
+            </Typography>
+            <BinanceP2PTable data={sellData} />
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );

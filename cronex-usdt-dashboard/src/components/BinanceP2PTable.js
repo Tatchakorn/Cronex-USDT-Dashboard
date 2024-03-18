@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
 
 const BinanceP2PTable = ({ data }) => (
-  <Box sx={{ overflowX: 'auto' }}> {/* Wrap TableContainer in a Box to make it scrollable */}
+  <Box sx={{ overflowX: 'auto' }}> {/* Keep this Box to handle overflow, if necessary */}
     <TableContainer component={Paper} sx={{ mb: 3, boxShadow: 1, maxWidth: '100%' }}>
       <Typography variant="h6" sx={{ py: 1, px: 2, backgroundColor: '#1D1D1D', color: 'white' }}>
         Advertisers
       </Typography>
-      <Table sx={{ minWidth: 650 }} aria-label="P2P data table">
+      <Table sx={{ minWidth: 300 }} aria-label="P2P data table"> {/* Adjust minWidth as needed */}
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Name</TableCell>
