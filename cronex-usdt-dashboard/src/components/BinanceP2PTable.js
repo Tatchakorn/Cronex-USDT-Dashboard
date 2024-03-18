@@ -34,7 +34,7 @@ BinanceP2PTable.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
+      price: PropTypes.string.isRequired,
       available: PropTypes.string.isRequired,
     })
   ).isRequired,

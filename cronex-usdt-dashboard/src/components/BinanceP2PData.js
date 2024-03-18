@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, Typography, ToggleButtonGroup, ToggleButton, Box, TextField, Button } from '@mui/material';
 import BinanceP2PTable from './BinanceP2PTable';
@@ -15,6 +15,11 @@ const BinanceP2PData = ({ buyData, sellData }) => {
       setData(newSide === 'buy' ? buyData : sellData);
     }
   };
+
+  useEffect(() => {
+    // Update data when buyData, sellData, or side changes
+    setData(side === 'buy' ? buyData : sellData);
+  }, [buyData, sellData, side]);
 
   const handlePriceSubmit = () => {
     // Implement the logic to handle price submission here

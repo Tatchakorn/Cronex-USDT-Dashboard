@@ -20,9 +20,9 @@ const BitkubTable = ({ data, title, themeColor }) => (
         <TableBody>
           {data.map((row, index) => (
             <TableRow key={index}>
-              <TableCell sx={{ py: 1, color: themeColor.rowText }}>{row.thbVolume}</TableCell>
+              <TableCell sx={{ py: 1, color: themeColor.rowText }}>{row.price}</TableCell>
               <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{row.usdtVolume}</TableCell>
-              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{row.price}</TableCell>
+              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{row.thbVolume}</TableCell>
             </TableRow>
           ))}
         </TableBody>

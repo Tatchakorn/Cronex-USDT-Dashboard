@@ -1,5 +1,6 @@
 // import from './components/D';
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import { Container, AppBar, Toolbar, Typography } from '@mui/material';
@@ -8,80 +9,88 @@ import BinanceP2PData from './components/BinanceP2PData';
 import BitkubInfo from './components/BitkubInfo';
 import usdtLogo from './assets/tether-usdt-logo.png';
 
+const ax = axios.create({
+    baseURL: 'http://192.168.1.152:8080',
+})
+
 const AppContent = () => {
-    // const [googleFinancePrice, setGoogleFinancePrice] = useState('100.23');
-    // const [binanceData, setBinanceData] = useState({ buyData: [], sellData: [] });
-    // const [bitkubData, setBitkubData] = useState({ bidData: [], askData: [], spotPrice: '33.37', change: '+0.12' });
-  
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     setGoogleFinancePrice(await fetchGoogleFinancePrice());
-    //     setBinanceData(await fetchBinanceData());
-    //     setBitkubData(await fetchBitkubData());
-    //   };
-  
-    //   fetchData(); // Fetch data immediately on component mount
-  
-    //   const interval = setInterval(fetchData, 60000); // Refresh data every 60 seconds
-  
-    //   return () => clearInterval(interval); // Cleanup interval on component unmount
-    // }, []);
+    const [googleFinancePrice, setGoogleFinancePrice] = useState('0');
+    const [binanceBuyData, setBinanceBuyData] = useState([]);
+    const [binanceSellData, setBinanceSellData] = useState([]);
+    const [bitkubBidData, setBitkubBidData] = useState([]);
+    const [bitkubAskData, setBitkubAskData] = useState([]);
+    const [bitkubSpotPrice, setBitkubSpotPrice] = useState('');
+    const [bitkubChange, setBitkubChange] = useState('');
 
-    const googleFinancePrice = '100.23';
+    useEffect(() => {
+        const fetchGoogleFinancePrice = async () => {
+            try {
+                const response = await ax.get('/google-price'); // Replace with your actual endpoint
+                setGoogleFinancePrice(response.data.data);
+            } catch (error) {
+                console.error('There was an error fetching the Google Finance price:', error);
+            }
+        };
 
-    const binanceBuyData = [
-    {
-        name: 'Alice123',
-        price: 35.81,
-        available: '5,000.00 - 10,000.00'
-        },
-        {
-        name: 'BobTheBuilder',
-        price: 35.80,
-        available: '1,000.00 - 2,000.00'
-        },
-        // ... more buy data
-    ];
-    const binanceSellData = [
-    {
-        name: 'Charlie789',
-        price: 36.00,
-        available: '500.00 - 5,000.00'
-        },
-        {
-        name: 'DeltaForce',
-        price: 36.05,
-        available: '2,500.00 - 7,500.00'
-        },
-        // ... more sell data
-    ];
+        const fetchBinanceData = async () => {
+            try {
+                const response = await ax.get('/binance-price'); // Use axios to fetch, replace '/binance-data' with your actual endpoint
+                const { buy, sell } = response.data.data; // Destructure buy and sell arrays from your response
+                setBinanceBuyData(buy.map(({ nickname, price, minAmount, maxAmount }) => ({
+                    name: nickname,
+                    price: price,
+                    available: `${minAmount} - ${maxAmount}`
+                })));
+                setBinanceSellData(sell.map(({ nickname, price, minAmount, maxAmount }) => ({
+                    name: nickname,
+                    price: price,
+                    available: `${minAmount} - ${maxAmount}`
+                })));
+            } catch (error) {
+                console.error('There was an error fetching the Binance data:', error);
+            }
+        };
 
-    const bitkubBidData = [
-    { 
-        thbVolume: '1,000,000.00', 
-        usdtVolume: '30,000.00', 
-        price: '33.33' 
-    },
-    { 
-        thbVolume: '500,000.00', 
-        usdtVolume: '15,000.00', 
-        price: '33.30' },
-    // ...more data
-    ];
-    const bitkubAskData = [
-    { 
-        thbVolume: '1,200,000.00', 
-        usdtVolume: '36,000.00', 
-        price: '33.40' },
-    { 
-        thbVolume: '600,000.00', 
-        usdtVolume: '18,000.00', 
-        price: '33.45' 
-    },
-    // ...more data
-    ];
-    const bitkubSpotPrice = '36.37';
-    const bitkubChange = '+0.12';
+        const fetchBitkubData = async () => {
+            try {
+                const response = await ax.get('/bitkub-price');
+                const { ticker, bids, asks } = response.data.data;
+
+                // Process and update spot price and change
+                setBitkubSpotPrice(ticker.price.toFixed(2));
+                setBitkubChange(`${ticker.change >= 0 ? '+' : ''}${ticker.change.toFixed(2)}`);
+
+                // Process and update bid data
+                const formattedBids = bids.map(bid => ({
+                    price: bid.rate.toFixed(2),
+                    thbVolume: bid.volTHB.toFixed(2),
+                    usdtVolume: bid.volUSDT.toFixed(2),
+                }));
+                setBitkubBidData(formattedBids);
+
+                // Process and update ask data
+                const formattedAsks = asks.map(ask => ({
+                    price: ask.rate.toFixed(2),
+                    thbVolume: ask.volTHB.toFixed(2),
+                    usdtVolume: ask.volUSDT.toFixed(2),
+                }));
+                setBitkubAskData(formattedAsks);
+
+            } catch (error) {
+                console.error('There was an error fetching the Bitkub market data:', error);
+            }
+        };
+
+        const fetchData = async () => {
+            await fetchGoogleFinancePrice();
+            await fetchBinanceData();
+            await fetchBitkubData();
+        }
+        fetchData();
+        const intervalId = setInterval(fetchData, 2000);
+        return () => clearInterval(intervalId);
+      
+    }, []);
 
     return (
         <Container>
