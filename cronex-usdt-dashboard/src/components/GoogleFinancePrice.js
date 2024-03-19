@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, Typography, useTheme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-
+import { formatNumber } from '../utils';
 const GoogleFinancePrice = ({ price }) => {
   const theme = useTheme();
   const [highlight, setHighlight] = useState(false);
@@ -31,7 +31,7 @@ const GoogleFinancePrice = ({ price }) => {
           borderRadius: '4px',
           p: '4px',
         }}>
-          USDT ${price}
+          USDT ${formatNumber(price)}
         </Typography>
       </CardContent>
     </Card>

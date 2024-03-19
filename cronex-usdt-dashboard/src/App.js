@@ -8,6 +8,7 @@ import GoogleFinancePrice from './components/GoogleFinancePrice';
 import BinanceP2PData from './components/BinanceP2PData';
 import BitkubInfo from './components/BitkubInfo';
 import usdtLogo from './assets/tether-usdt-logo.png';
+import { formatNumber } from './utils'
 
 const ax = axios.create({
     baseURL: 'http://192.168.1.152:8080',
@@ -39,12 +40,12 @@ const AppContent = () => {
                 setBinanceBuyData(buy.map(({ nickname, price, minAmount, maxAmount }) => ({
                     name: nickname,
                     price: price,
-                    available: `${minAmount} - ${maxAmount}`
+                    available: `${formatNumber(minAmount)} - ${formatNumber(maxAmount)}`
                 })));
                 setBinanceSellData(sell.map(({ nickname, price, minAmount, maxAmount }) => ({
                     name: nickname,
                     price: price,
-                    available: `${minAmount} - ${maxAmount}`
+                    available: `${formatNumber(minAmount)} - ${formatNumber(maxAmount)}`
                 })));
             } catch (error) {
                 console.error('There was an error fetching the Binance data:', error);

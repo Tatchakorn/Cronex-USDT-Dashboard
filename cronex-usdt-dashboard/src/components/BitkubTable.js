@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
+import { formatNumber } from '../utils';
 
 const BitkubTable = ({ data, title, themeColor }) => (
   <Box sx={{ overflowX: 'auto' }}>
@@ -21,9 +22,8 @@ const BitkubTable = ({ data, title, themeColor }) => (
           {data.map((row, index) => (
             <TableRow key={index}>
               <TableCell sx={{ py: 1, color: themeColor.rowText }}>{row.price}</TableCell>
-              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{row.usdtVolume}</TableCell>
-              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{row.thbVolume}</TableCell>
-            </TableRow>
+              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{formatNumber(row.usdtVolume)}</TableCell>
+              <TableCell sx={{ py: 1, color: themeColor.rowText }} align="right">{formatNumber(row.thbVolume)}</TableCell>            </TableRow>
           ))}
         </TableBody>
       </Table>
